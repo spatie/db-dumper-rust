@@ -1,0 +1,23 @@
+[package]
+name = "spatie-db-dumper"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89"
+description = "Dump MySQL, MariaDB, PostgreSQL, SQLite and MongoDB databases using native tools"
+license = "MIT"
+repository = "https://github.com/spatie/db-dumper-rust"
+keywords = ["database", "backup", "dump", "mysql", "postgresql"]
+categories = ["database"]
+
+[dependencies]
+percent-encoding = "2"
+same-file = "1"
+serde_json = "1"
+tempfile = "3"
+thiserror = "2"
+url = "2"
+wait-timeout = "0.2"
+
+[profile.release]
+lto = "thin"
+strip = true

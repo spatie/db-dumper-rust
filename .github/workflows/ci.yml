@@ -1,0 +1,135 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Stable / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-26-intel, windows-latest]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --locked --all-targets -- -D warnings
+      - run: cargo test --locked --all-targets
+      - run: cargo test --locked --doc
+      - run: cargo doc --locked --no-deps
+        env:
+          RUSTDOCFLAGS: -D warnings
+
+  msrv:
+    name: MSRV
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.89.0
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo +1.89.0 test --locked --all-targets
+      - run: cargo +1.89.0 test --locked --doc
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install cargo-audit --locked
+      - run: cargo audit --deny warnings
+
+  native-tools:
+    name: Native / ${{ matrix.database }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - database: sqlite
+            packages: sqlite3 gzip bzip2
+            test: sqlite_
+          - database: mysql
+            packages: mysql-client
+            test: mysql_native_roundtrip
+          - database: mariadb
+            packages: mariadb-client
+            test: mariadb_native_roundtrip
+          - database: postgresql
+            packages: postgresql-client
+            test: postgresql_native_roundtrip
+          - database: mongodb
+            packages: ca-certificates curl
+            test: mongodb_native_archive_roundtrip
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: fixture
+          MYSQL_ROOT_HOST: '%'
+        ports:
+          - 33060:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pfixture"
+          --health-interval=10s --health-timeout=5s --health-retries=12
+      mariadb:
+        image: mariadb:11.8
+        env:
+          MARIADB_ROOT_PASSWORD: fixture
+          MARIADB_ROOT_HOST: '%'
+        ports:
+          - 33061:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s --health-timeout=5s --health-retries=12
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: fixture
+          POSTGRES_DB: db_dumper_test_pg
+        ports:
+          - 54320:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s --health-timeout=5s --health-retries=12
+      mongo:
+        image: mongo:8
+        ports:
+          - 27018:27017
+        options: >-
+          --health-cmd="mongosh --quiet --eval 'db.runCommand({ping:1}).ok'"
+          --health-interval=10s --health-timeout=5s --health-retries=12
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Install native clients
+        env:
+          PACKAGES: ${{ matrix.packages }}
+        run: sudo apt-get update && sudo apt-get install -y $PACKAGES
+      - name: Install MongoDB Database Tools
+        if: matrix.database == 'mongodb'
+        run: |
+          curl -fsSL https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2404-x86_64-100.13.0.tgz -o "$RUNNER_TEMP/mongodb-tools.tgz"
+          tar -xzf "$RUNNER_TEMP/mongodb-tools.tgz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/mongodb-database-tools-ubuntu2404-x86_64-100.13.0/bin" >> "$GITHUB_PATH"
+      - name: Dump and restore native databases
+        env:
+          DB_DUMPER_MYSQL_URL: mysql://root:fixture@127.0.0.1:33060/db_dumper_test_mysql
+          DB_DUMPER_MARIADB_URL: mysql://root:fixture@127.0.0.1:33061/db_dumper_test_maria
+          DB_DUMPER_POSTGRESQL_URL: postgres://postgres:fixture@127.0.0.1:54320/db_dumper_test_pg
+          DB_DUMPER_MONGODB_URL: mongodb://127.0.0.1:27018/db_dumper_test_mongo
+          TEST: ${{ matrix.test }}
+        run: cargo test --locked --test native_tools "$TEST" -- --ignored --nocapture
