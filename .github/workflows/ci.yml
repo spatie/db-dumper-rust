@@ -53,7 +53,7 @@ jobs:
 
   native-tools:
     name: Native / ${{ matrix.database }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -68,7 +68,7 @@ jobs:
             packages: mariadb-client
             test: mariadb_native_roundtrip
           - database: postgresql
-            packages: postgresql-client
+            packages: postgresql-client-16
             test: postgresql_native_roundtrip
           - database: mongodb
             packages: ca-certificates curl
@@ -119,6 +119,9 @@ jobs:
         env:
           PACKAGES: ${{ matrix.packages }}
         run: sudo apt-get update && sudo apt-get install -y $PACKAGES
+      - name: Select the PostgreSQL client matching the server
+        if: matrix.database == 'postgresql'
+        run: echo "/usr/lib/postgresql/16/bin" >> "$GITHUB_PATH"
       - name: Install MongoDB Database Tools
         if: matrix.database == 'mongodb'
         run: |
