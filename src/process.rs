@@ -607,7 +607,7 @@ pub(crate) fn sqlite_tables(config: &Config) -> Result<Vec<String>, Error> {
         OsStr::new("-json"),
         path.as_os_str(),
         OsStr::new(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';",
+            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT GLOB 'sqlite_*';",
         ),
     ]);
     let mut output = tempfile::tempfile()?;

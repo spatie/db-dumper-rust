@@ -31,6 +31,27 @@ fn sqlite(path: &std::path::Path, sql: &str) -> Vec<u8> {
 }
 
 #[test]
+#[ignore = "requires sqlite3"]
+fn sqlite_table_listing_does_not_hide_names_similar_to_reserved_tables() {
+    let dir = tempfile::tempdir().unwrap();
+    let source = dir.path().join("source.sqlite");
+    sqlite(
+        &source,
+        "CREATE TABLE sqlitex_data(id INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO sqlitex_data DEFAULT VALUES; CREATE TABLE logs(value TEXT);",
+    );
+    let dumper = Sqlite::create().set_db_name(source.to_str().unwrap());
+    assert_eq!(dumper.get_db_tables().unwrap(), ["sqlitex_data", "logs"]);
+    let dump = dir.path().join("dump.sql");
+    dumper.exclude_tables(["logs"]).dump_to_file(&dump).unwrap();
+    let restored = dir.path().join("restored.sqlite");
+    execute(
+        Command::new("sqlite3").arg(&restored),
+        Some(&fs::read(dump).unwrap()),
+    );
+    assert_eq!(sqlite(&restored, "SELECT id FROM sqlitex_data;"), b"1\n");
+}
+
+#[test]
 #[ignore = "requires sqlite3, gzip and bzip2"]
 fn sqlite_roundtrip_selection_compression_and_source_protection() {
     let dir = tempfile::tempdir().unwrap();
