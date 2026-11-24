@@ -21,7 +21,7 @@ cargo +1.89.0 test --locked --doc --all-features
 cargo audit --deny warnings
 ```
 
-Install `cargo-audit` with `cargo install cargo-audit --locked` first. The portable tests compile a small Rust fixture executable. They need no running database and run on Linux, macOS and Windows in CI. The documentation's database examples compile as doctests with `no_run`; they retain the PHP examples' assumption that you supply database credentials and have the matching tool installed.
+Install `cargo-audit` with `cargo install cargo-audit --locked` first. The portable tests compile a small Rust fixture executable. They need no running database and run on Linux, macOS and Windows in CI. The documentation's database examples compile as doctests with `no_run`; supply database credentials and install the matching database tool before running them.
 
 ## Native database tests
 

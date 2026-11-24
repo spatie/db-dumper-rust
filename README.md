@@ -117,11 +117,11 @@ For dumping MongoDB-db's `mongodump` should be installed.
 
 For compressing dump files, `gzip` and/or `bzip2` should be installed.
 
-Use SQLite 3.33+ for JSON table listings and MongoDB Database Tools 100.3.0+ for protected password configuration. As with PHP, choose a dump client compatible with your database server. Rust does not require PHP, `sed` or `tail`.
+Use SQLite 3.33+ for JSON table listings and MongoDB Database Tools 100.3.0+ for protected password configuration. Choose a dump client compatible with your database server. No PHP, `sed` or `tail` installation is needed.
 
 ## Usage
 
-Builder methods consume and return the dumper. Dumping returns `Result<(), Error>`. Extra options are literal arguments, not shell fragments. See [PARITY](PARITY.md) for the complete PHP API mapping and safety differences.
+Builder methods consume and return the dumper. Dumping returns `Result<(), Error>`. Extra options are literal arguments, not shell fragments. See [processes and output](docs/processes-and-output.md) for deadlines, credentials and output safety.
 
 This is the simplest way to create a dump of a MySql db:
 

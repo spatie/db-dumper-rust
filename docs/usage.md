@@ -3,7 +3,7 @@ title: Usage
 weight: 5
 ---
 
-Builder methods consume and return the dumper. Dumping returns `Result<(), Error>`. Extra options are literal arguments, not shell fragments. See [PARITY](parity.md) for the complete PHP API mapping and safety differences.
+Builder methods consume and return the dumper. Dumping returns `Result<(), Error>`. Extra options are literal arguments, not shell fragments. See [processes and output safety](processes-and-output.md) for credentials, deadlines and publication guarantees.
 
 This is the simplest way to create a dump of a MySql db:
 

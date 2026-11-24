@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 - 2026-11-24
+
+- Organize the guides around database tools, process configuration and safe output.
+
 ## 1.0.0 - 2026-11-24
 
 - Keep SQLite user tables such as `sqlitex_data` in table listings and dumps with exclusions.
