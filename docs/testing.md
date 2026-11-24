@@ -11,12 +11,13 @@ cargo test --locked
 
 ```bash
 cargo fmt --all -- --check
-cargo clippy --locked --all-targets -- -D warnings
-cargo test --locked --all-targets
-cargo test --locked --doc
-RUSTDOCFLAGS='-D warnings' cargo doc --locked --no-deps
-cargo +1.89.0 test --locked --all-targets
-cargo +1.89.0 test --locked --doc
+cargo clippy --locked --all-targets --all-features -- -D warnings
+cargo test --locked --all-targets --all-features
+cargo test --locked --doc --all-features
+RUSTDOCFLAGS='-D warnings' cargo doc --locked --no-deps --all-features
+cargo package --locked
+cargo +1.89.0 test --locked --all-targets --all-features
+cargo +1.89.0 test --locked --doc --all-features
 cargo audit --deny warnings
 ```
 

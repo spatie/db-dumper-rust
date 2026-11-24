@@ -98,6 +98,10 @@ impl<T: Into<String>> From<Vec<T>> for Tables {
 /// [`Self::dump_to_file`]. Clones share an immutable compressor.
 /// This type does not implement `Debug`, to avoid logging credentials.
 #[derive(Clone)]
+#[expect(
+    missing_debug_implementations,
+    reason = "Configuration contains credentials"
+)]
 pub struct DbDumper<D = Database> {
     driver: D,
     pub(crate) config: Config,

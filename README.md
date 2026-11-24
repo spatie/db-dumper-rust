@@ -1,5 +1,9 @@
 # Dump the contents of a database
 
+[![Latest version on crates.io](https://img.shields.io/crates/v/spatie-db-dumper.svg?style=flat-square)](https://crates.io/crates/spatie-db-dumper)
+[![Tests](https://img.shields.io/github/actions/workflow/status/spatie/db-dumper-rust/ci.yml?branch=main&style=flat-square)](https://github.com/spatie/db-dumper-rust/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/spatie/db-dumper-rust/blob/main/LICENSE.md)
+[![Total downloads](https://img.shields.io/crates/d/spatie-db-dumper.svg?style=flat-square)](https://crates.io/crates/spatie-db-dumper)
 
 This repo contains an easy to use crate to dump a database using Rust. Currently MySQL, MariaDB, PostgreSQL, SQLite and MongoDB are supported. Behind the scenes `mysqldump`, `mariadb-dump`, `pg_dump`, `sqlite3` and `mongodump` are used.
 
@@ -83,13 +87,23 @@ MongoDb::create()
 
 ## Support us
 
-[<img src="https://spatie.be/github-ad-image/db-dumper.jpg" width="419px" />](https://spatie.be/github-ad-click/db-dumper)
+[<img src="https://spatie.be/github-ad-image/db-dumper.jpg" alt="Support Spatie's open source work" width="419px" />](https://spatie.be/github-ad-click/db-dumper)
 
 We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
 
 We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
-## Requirements
+## Installation
+
+Rust 1.89 or newer is required (Rust 2024 edition). The crate is not published on crates.io, so use a Git dependency.
+
+You can install the package via Cargo:
+
+```bash
+cargo add spatie-db-dumper --git https://github.com/spatie/db-dumper-rust.git --branch main
+```
+
+### Requirements
 
 For dumping MySQL-db's `mysqldump` should be installed.
 
@@ -104,16 +118,6 @@ For dumping MongoDB-db's `mongodump` should be installed.
 For compressing dump files, `gzip` and/or `bzip2` should be installed.
 
 Use SQLite 3.33+ for JSON table listings and MongoDB Database Tools 100.3.0+ for protected password configuration. As with PHP, choose a dump client compatible with your database server. Rust does not require PHP, `sed` or `tail`.
-
-## Installation
-
-Rust 1.89 or newer is required (Rust 2024 edition). The crate is not published on crates.io, so use a Git dependency.
-
-You can install the package via Cargo:
-
-```bash
-cargo add spatie-db-dumper --git https://github.com/spatie/db-dumper-rust.git --branch main
-```
 
 ## Usage
 
@@ -555,16 +559,18 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md) for details.
+See [CONTRIBUTING.md](https://github.com/spatie/db-dumper-rust/blob/main/CONTRIBUTING.md) and the [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/).
+
+Using an AI coding agent? Load Apollo's [rust-best-practices skill](https://github.com/apollographql/skills/tree/main/skills/rust-best-practices) when writing or reviewing code in this package.
 
 ## Security Vulnerabilities
 
-Please report security vulnerabilities to [security@spatie.be](mailto:security@spatie.be).
+Report vulnerabilities privately using the instructions in [SECURITY.md](https://github.com/spatie/db-dumper-rust/blob/main/SECURITY.md).
 
 ## Credits
 
 -   [Freek Van der Herten](https://github.com/freekmurze)
--   [All Contributors](https://github.com/spatie/db-dumper/graphs/contributors)
+-   [All contributors](https://github.com/spatie/db-dumper-rust/graphs/contributors)
 
 Initial PostgreSQL support was contributed by [Adriano Machado](https://github.com/ammachado). SQlite support was contributed by [Peter Matseykanets](https://twitter.com/pmatseykanets).
 

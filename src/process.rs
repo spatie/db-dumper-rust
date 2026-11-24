@@ -16,6 +16,10 @@ use crate::{Database, Error, dumper::Config};
 ///
 /// `Debug` is deliberately unavailable. Extra options may themselves be secrets.
 /// Dropping this value removes its credential files.
+#[expect(
+    missing_debug_implementations,
+    reason = "Arguments may contain credentials"
+)]
 pub struct DumpCommand {
     program: PathBuf,
     args: Vec<OsString>,

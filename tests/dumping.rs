@@ -1,3 +1,5 @@
+//! Portable database dump behavior using fixture executables.
+
 use spatie_db_dumper::{
     Bzip2Compressor, Compressor, Database, DbDumper, Error, GzipCompressor, MariaDb, MongoDb,
     MySql, PostgreSql, Sqlite,

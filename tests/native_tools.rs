@@ -1,3 +1,5 @@
+//! Dump and restore integration tests requiring native database tools.
+
 use spatie_db_dumper::{Bzip2Compressor, Database, DbDumper, Error, GzipCompressor, Sqlite};
 use std::{
     fs,
