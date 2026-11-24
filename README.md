@@ -95,12 +95,12 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 
 ## Installation
 
-Rust 1.89 or newer is required (Rust 2024 edition). The crate is not published on crates.io, so use a Git dependency.
+Rust 1.89 or newer is required (Rust 2024 edition).
 
 You can install the package via Cargo:
 
 ```bash
-cargo add spatie-db-dumper --git https://github.com/spatie/db-dumper-rust.git --branch main
+cargo add spatie-db-dumper
 ```
 
 ### Requirements
